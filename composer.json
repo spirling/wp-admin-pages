@@ -1,0 +1,24 @@
+{
+  "name": "spirling/di-wp-admin-pages",
+  "description": "Admin pages for Wordpress",
+  "version": "0.0.1",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Johnie Spirling",
+      "email": "johnie.spirling@gmail.com",
+      "role": "master"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Spirling\\WpAdminPages\\": "src"
+    },
+    "files": [
+      "include/functions.php"
+    ]
+  },
+  "require": {
+    "php": "^7.0"
+  }
+}
