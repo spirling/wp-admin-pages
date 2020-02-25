@@ -82,6 +82,12 @@ abstract class PageAbstract
                 $this->getSlug(), // menu slug
                 [$this, 'render'] // callback
             );
+            if (!is_null($this->childPages)) {
+                foreach ($this->childPages as $childPage) {
+                    $childPage->setParentSlug($this->getSlug());
+                    $childPage->addToMenu();
+                }
+            }
         } else {
             $pageHook = add_submenu_page(
                 $this->parentSlug, // parent
@@ -91,12 +97,6 @@ abstract class PageAbstract
                 $this->getSlug(), // menu slug
                 [$this, 'render'] // callback
             );
-            if (!is_null($this->childPages)) {
-                foreach ($this->childPages as $childPage) {
-                    $childPage->setParentSlug($this->getSlug());
-                    $childPage->addToMenu();
-                }
-            }
         }
         add_action('load-'.$pageHook, [$this, 'load']);
     }
