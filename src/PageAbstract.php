@@ -19,6 +19,16 @@ abstract class PageAbstract
     protected $uri;
 
     /**
+     * @var string
+     */
+    protected $parentSlug;
+
+    /**
+     * @var null|array
+     */
+    protected $childPages;
+
+    /**
      * @param string$name
      *
      * @return mixed|null
@@ -36,14 +46,35 @@ abstract class PageAbstract
     }
 
     /**
+     * @param string $parentSlug
+     */
+    public function setParentSlug($parentSlug)
+    {
+        is_null($this->childPages) and $this->parentSlug = $parentSlug;
+    }
+
+    /**
+     * @param PageAbstract $page
+     */
+    public function addChildPage(PageAbstract $page)
+    {
+        is_null($this->parentSlug) and $this->childPages[get_class($page)] = $page;
+    }
+
+    public function getChildPageByClassName($className)
+    {
+        return $this->childPages[$className];
+    }
+
+    /**
      * Add page to menu
      *
      * @param string $parent
      */
-    public function addToMenu($parent = null)
+    public function addToMenu()
     {
         $title = $this->getTitle();
-        if (is_null($parent)) {
+        if (is_null($this->parentSlug)) {
             $pageHook = add_menu_page(
                 $title, // Page title
                 $title, // Menu title
@@ -53,13 +84,19 @@ abstract class PageAbstract
             );
         } else {
             $pageHook = add_submenu_page(
-                $parent, // parent
+                $this->parentSlug, // parent
                 $title, // Page title
                 $title, // Menu title
                 'manage_options', // capability
                 $this->getSlug(), // menu slug
                 [$this, 'render'] // callback
             );
+            if (!is_null($this->childPages)) {
+                foreach ($this->childPages as $childPage) {
+                    $childPage->setParentSlug($this->getSlug());
+                    $childPage->addToMenu();
+                }
+            }
         }
         add_action('load-'.$pageHook, [$this, 'load']);
     }
