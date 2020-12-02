@@ -15,6 +15,10 @@ abstract class TabbedPageAbstract extends PageAbstract
      */
     abstract public function getTabs();
 
+    protected function getTemplatesDir() {
+        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
+    }
+
     /**
      * @inheritDoc
      */
@@ -24,7 +28,7 @@ abstract class TabbedPageAbstract extends PageAbstract
         $currentTab = $this->getCurrentTab();
         if (isset($currentTab)) {
             $page = $this;
-            includeAdminTemplate('admin/pages/tabs.php', compact('tabs', 'currentTab', 'page'));
+            includeAdminTemplate($this->getTemplatesDir() . 'admin/pages/tabs.php', compact('tabs', 'currentTab', 'page'));
             $currentTab->render();
         } else {
             wp_redirect( $this->getUri() );

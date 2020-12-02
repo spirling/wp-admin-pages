@@ -29,6 +29,11 @@ abstract class PageAbstract
     protected $childPages;
 
     /**
+     * @var string
+     */
+    protected $capability = 'manage_options';
+
+    /**
      * @param string$name
      *
      * @return mixed|null
@@ -66,6 +71,11 @@ abstract class PageAbstract
         return $this->childPages[$className];
     }
 
+    public function setCapability($capability)
+    {
+        $this->capability = $capability;
+    }
+
     /**
      * Add page to menu
      *
@@ -78,7 +88,7 @@ abstract class PageAbstract
             $pageHook = add_menu_page(
                 $title, // Page title
                 $title, // Menu title
-                'manage_options', // capability
+                $this->capability, // capability
                 $this->getSlug(), // menu slug
                 [$this, 'render'] // callback
             );
@@ -93,7 +103,7 @@ abstract class PageAbstract
                 $this->parentSlug, // parent
                 $title, // Page title
                 $title, // Menu title
-                'manage_options', // capability
+                $this->capability, // capability
                 $this->getSlug(), // menu slug
                 [$this, 'render'] // callback
             );

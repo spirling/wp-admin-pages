@@ -42,6 +42,10 @@ abstract class TabAbstract
         return $this->uri;
     }
 
+    public function getPage() {
+        return $this->page;
+    }
+
     /**
      * Get tab slug
      *
